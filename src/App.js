@@ -18,11 +18,12 @@ function App() {
   const [year,setYear] = useState('');
   const [startDate,setStartDate] = useState('');
 
-  const files = acceptedFiles.map((file) => (
-    <li key={file.path}>
-      {file.path} - {file.size} bytes
-    </li>
-  ));
+  // const [tableData, setTableData] = useState([]);
+
+  const files = acceptedFiles.map((file) =>{
+    console.log(file);
+    return file;
+  });
 
   return (
     <Container>
@@ -33,11 +34,11 @@ function App() {
         <CrDropzone
           getRootProps={getRootProps}
           getInputProps={getInputProps}
-          files={files}
+          // files={files}
         />
       </Segment>
       <Segment>
-        <CrTable /> 
+        <CrTable tableData={files} /> 
       </Segment>
       <Segment>
         <Segment floated="left" compact style={{marginTop:'1rem'}}>
