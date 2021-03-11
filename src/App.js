@@ -53,10 +53,7 @@ function App() {
           selected={year} 
           />
         </Segment>
-  
         <p style={{clear:"both"}} />
-
-  
       </Segment>
       <Button onClick={()=>{open()}}  content="Open" primary/>
     </Container>
