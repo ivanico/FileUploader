@@ -29,7 +29,7 @@ function App() {
       <Segment style={{ marginTop: "20px" }}>
         <Header as="h1">Load Cr Data</Header>
       </Segment>
-      <Segment style={{ padding: "10px" }}>
+      <Segment style={{ padding: "10px" , display: "none" }}>
         <CrDropzone
           getRootProps={getRootProps}
           getInputProps={getInputProps}
@@ -58,7 +58,7 @@ function App() {
 
   
       </Segment>
-      <Button onClick={()=>{open()}}  content="Open" primary/>
+      {/* <Button onClick={()=>{open()}}  content="Open" primary/> */}
     </Container>
   );
 }
