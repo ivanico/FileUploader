@@ -21,22 +21,21 @@ const CrTable = ({ tableData }) => {
           return (
             <Table.Row key={ind} >
               <Table.Cell>
-                <Header as="h2" textAlign="center">
-                  A
-                </Header>
+                {new Date(tr.lastModified).toISOString().substring(0, 10)}
               </Table.Cell>
-              <Table.Cell singleLine>Power Output</Table.Cell>
-              <Table.Cell>
-                <Rating icon="star" defaultRating={3} maxRating={3} />
-              </Table.Cell>
-              <Table.Cell textAlign="right">
-                80% <br />
-                <a href="#">18 studies</a>
+              <Table.Cell singleLine>
+                {tr.name}
               </Table.Cell>
               <Table.Cell>
-                Creatine supplementation is the reference compound for
-                increasing muscular creatine levels; there is variability in
-                this increase, however, with some nonresponders.
+                {tr.name}
+              </Table.Cell>
+              <Table.Cell>
+              </Table.Cell>
+              <Table.Cell>
+              </Table.Cell>
+              <Table.Cell>
+              </Table.Cell>
+              <Table.Cell>
               </Table.Cell>
             </Table.Row>
           );

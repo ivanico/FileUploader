@@ -38,9 +38,6 @@ function App() {
         />
       </Segment>
       <Segment>
-        <CrTable tableData={files} /> 
-      </Segment>
-      <Segment>
         <Segment floated="left" compact style={{marginTop:'1rem'}}>
           <Label>Date</Label>
           <ReactDatePicker dateFormat="yyyy/MM"
@@ -56,6 +53,10 @@ function App() {
         </Segment>
         <p style={{clear:"both"}} />
       </Segment>
+      <Segment>
+        <CrTable tableData={files} /> 
+      </Segment>
+      
       {/* <Button onClick={()=>{open()}}  content="Open" primary/> */}
     </Container>
   );
