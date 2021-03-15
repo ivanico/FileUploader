@@ -1,7 +1,7 @@
 import React from "react";
 import { Header, Rating, Table } from "semantic-ui-react";
 
-const CrTable = ({ tableData }) => {
+const CrTable = ({ tableData, startDate }) => {
   return (
     <Table celled padded>
       <Table.Header>
@@ -21,7 +21,7 @@ const CrTable = ({ tableData }) => {
           return (
             <Table.Row key={ind} >
               <Table.Cell>
-                {new Date(tr.lastModified).toISOString().substring(0, 10)}
+                {new Date(startDate).toISOString().substring(0, 7)}
               </Table.Cell>
               <Table.Cell singleLine>
                 {tr.name}
