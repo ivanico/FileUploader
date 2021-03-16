@@ -7,7 +7,6 @@ import CrTable from "./components/CrTable";
 import CrDropzone from "./components/CrDropzone";
 import DatePicker from "react-datepicker";
 import { useState } from "react";
-import SemanticDatepicker from "react-semantic-ui-datepickers";
 
 function App() {
   const { getRootProps, getInputProps, open, acceptedFiles } = useDropzone({
@@ -17,17 +16,17 @@ function App() {
   });
 
   const [startDate, setStartDate] = useState(new Date());
-  const [user,setUser] = useState('');
-
-  
+  const [vcitajEnabled,setVcitajEnabled] = useState(false);
 
   // const [tableData, setTableData] = useState([]);
 
   const files = acceptedFiles.map((file) =>{
-    console.log(file);
-    console.log(startDate);
     return file;
   });
+
+  const clickVcitaj = ()=> {
+    setVcitajEnabled(false);
+  }
 
   return (
     <Container>
@@ -43,9 +42,9 @@ function App() {
       </Segment>
       <Segment>
         <Segment.Group horizontal>
-          <Segment floated="left" compact style={{ marginTop: "1rem" }}>
-            <div class="ui labeled input">
-              <div class="ui label label">Дата</div>
+          <Segment >
+            <div className="ui labeled input">
+              <Label>Дата</Label>
               <DatePicker
                 fluid
                 selected={startDate}
@@ -56,6 +55,7 @@ function App() {
                 onChange={(date) => {
                   setStartDate(date);
                   open();
+                  setVcitajEnabled(true);
                 }}
               />
             </div>
@@ -64,7 +64,7 @@ function App() {
             <Input label="Корисник" placeholder="Корисник" />
           </Segment>
           <Segment>
-            <Button>Вчитај</Button>
+            <Button primary disabled={!vcitajEnabled} onClick={clickVcitaj}>Вчитај</Button>
           </Segment>
         </Segment.Group>
         <p style={{ clear: "both" }} />
@@ -72,7 +72,6 @@ function App() {
       <Segment>
         <CrTable tableData={files} startDate={startDate} />
       </Segment>
-      {/* <Button onClick={()=>{open()}}  content="Open" primary/> */}
     </Container>
   );
 }
