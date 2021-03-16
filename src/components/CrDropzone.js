@@ -5,7 +5,7 @@ const CrDropzone = (props) => {
   return ( 
     <>
       <div {...getRootProps({className: 'dropzone'})}>
-      <input {...getInputProps()} />
+      <input {...getInputProps()} directory="" webkitdirectory="" type="file" />
       <p>Drag 'n' drop some files here, or click to select files</p>
     </div>
     <aside>

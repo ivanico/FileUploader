@@ -23,7 +23,7 @@ const CrTable = ({ tableData, startDate }) => {
               <Table.Cell>
                 {new Date(startDate).toISOString().substring(0, 7)}
                 </Table.Cell>
-              <Table.Cell singleLine>
+              <Table.Cell>
                 {tr.name}
               </Table.Cell>
               <Table.Cell>

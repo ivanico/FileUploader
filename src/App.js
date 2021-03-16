@@ -1,12 +1,13 @@
 import "./App.css";
 import "semantic-ui-css/semantic.min.css";
 import "react-datepicker/dist/react-datepicker.css";
-import { Button, Container, Header, Label, Segment } from "semantic-ui-react";
+import { Button, Container, Header, Input, Label, Segment } from "semantic-ui-react";
 import { useDropzone } from "react-dropzone";
 import CrTable from "./components/CrTable";
 import CrDropzone from "./components/CrDropzone";
-import ReactDatePicker from "react-datepicker";
+import DatePicker from "react-datepicker";
 import { useState } from "react";
+import SemanticDatepicker from "react-semantic-ui-datepickers";
 
 function App() {
   const { getRootProps, getInputProps, open, acceptedFiles } = useDropzone({
@@ -16,8 +17,8 @@ function App() {
   });
 
   const [startDate, setStartDate] = useState(new Date());
-  const [month,setMonth] = useState('');
-  const [year,setYear] = useState('');
+  const [user,setUser] = useState('');
+
   
 
   // const [tableData, setTableData] = useState([]);
@@ -33,7 +34,7 @@ function App() {
       <Segment style={{ marginTop: "20px" }}>
         <Header as="h1">Load Cr Data</Header>
       </Segment>
-      <Segment style={{ padding: "10px" , display: "none" }}>
+      <Segment style={{ padding: "10px", display: "none" }}>
         <CrDropzone
           getRootProps={getRootProps}
           getInputProps={getInputProps}
@@ -41,26 +42,36 @@ function App() {
         />
       </Segment>
       <Segment>
-        <Segment floated="left" compact style={{marginTop:'1rem'}}>
-          <Label>Date</Label>
-          <ReactDatePicker
-          selected={startDate}
-          dateFormat="yyyy/MM"
-          selectsEnd
-          showMonthYearPicker
-          placeholderText="Year/Month"
-          onChange={date => {
-            setStartDate(date);
-            open();
-          }}
-          />
-        </Segment>
-        <p style={{clear:"both"}} />
+        <Segment.Group horizontal>
+          <Segment floated="left" compact style={{ marginTop: "1rem" }}>
+            <div class="ui labeled input">
+              <div class="ui label label">Дата</div>
+              <DatePicker
+                fluid
+                selected={startDate}
+                dateFormat="yyyy/MM"
+                selectsEnd
+                showMonthYearPicker
+                placeholderText="Year/Month"
+                onChange={(date) => {
+                  setStartDate(date);
+                  open();
+                }}
+              />
+            </div>
+          </Segment>
+          <Segment>
+            <Input label="Корисник" placeholder="Корисник" />
+          </Segment>
+          <Segment>
+            <Button>Вчитај</Button>
+          </Segment>
+        </Segment.Group>
+        <p style={{ clear: "both" }} />
       </Segment>
       <Segment>
-        <CrTable tableData={files} startDate={startDate}/> 
+        <CrTable tableData={files} startDate={startDate} />
       </Segment>
-      
       {/* <Button onClick={()=>{open()}}  content="Open" primary/> */}
     </Container>
   );
