@@ -1,7 +1,7 @@
 import React from 'react';
 
 const CrDropzone = (props) => {
-  const {getRootProps,getInputProps, files } = props;
+  const {getRootProps,getInputProps, files, } = props;
   return ( 
     <>
       <div {...getRootProps({className: 'dropzone'})}>

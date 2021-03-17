@@ -1,12 +1,14 @@
 import "./App.css";
 import "semantic-ui-css/semantic.min.css";
 import "react-datepicker/dist/react-datepicker.css";
-import { Button, Container, Header, Input, Label, Segment } from "semantic-ui-react";
+import { Button, Container, Header, Input, Label, Progress, Segment } from "semantic-ui-react";
 import { useDropzone } from "react-dropzone";
 import CrTable from "./components/CrTable";
 import CrDropzone from "./components/CrDropzone";
 import DatePicker from "react-datepicker";
 import { useState } from "react";
+import CrModal from "./components/CrModal";
+// import { ReactS3Uploader } from 'react-s3-uploader';
 
 function App() {
   const { getRootProps, getInputProps, open, acceptedFiles } = useDropzone({
@@ -17,6 +19,8 @@ function App() {
 
   const [startDate, setStartDate] = useState(new Date());
   const [vcitajEnabled,setVcitajEnabled] = useState(false);
+  const [korisnik,setKoriskin] = useState('');
+
 
   // const [tableData, setTableData] = useState([]);
 
@@ -27,6 +31,8 @@ function App() {
   const clickVcitaj = ()=> {
     setVcitajEnabled(false);
   }
+
+  
 
   return (
     <Container>
@@ -42,7 +48,7 @@ function App() {
       </Segment>
       <Segment>
         <Segment.Group horizontal>
-          <Segment >
+          <Segment>
             <div className="ui labeled input">
               <Label>Дата</Label>
               <DatePicker
@@ -61,10 +67,12 @@ function App() {
             </div>
           </Segment>
           <Segment>
-            <Input label="Корисник" placeholder="Корисник" />
+            <Input label="Корисник" placeholder="Корисник" value={korisnik} />
           </Segment>
           <Segment>
-            <Button primary disabled={!vcitajEnabled} onClick={clickVcitaj}>Вчитај</Button>
+            <Button primary disabled={!vcitajEnabled} onClick={clickVcitaj}>
+              Вчитај
+            </Button>
           </Segment>
         </Segment.Group>
         <p style={{ clear: "both" }} />
@@ -72,6 +80,8 @@ function App() {
       <Segment>
         <CrTable tableData={files} startDate={startDate} />
       </Segment>
+      <Progress percent={50} />
+      <CrModal/>
     </Container>
   );
 }
