@@ -1,15 +1,14 @@
 import React,{useState} from 'react'
 import { Button, Modal, Divider, Form, Grid, Segment } from 'semantic-ui-react'
 
-function CrModal() {
-  const [open, setOpen] = useState(false)
+function CrModal(props) {
 
+  const {openFiles, openDirectory} = props;
   return (
     <Modal
-      onClose={() => setOpen(false)}
-      onOpen={() => setOpen(true)}
-      open={open}
-      trigger={<Button>Show Modal</Button>}
+      onClose={() => props.setOpen(false)}
+      onOpen={() => props.setOpen(true)}
+      open={props.open}
     >
       <Modal.Header>Select upload </Modal.Header>
       <Modal.Content>
@@ -17,10 +16,10 @@ function CrModal() {
           <Segment placeholder>
             <Grid columns={2} relaxed="very" stackable>
               <Grid.Column>
-                <Button content="File" size="big" />
+                <Button onClick={()=> {openFiles();props.setOpen(false)}} content="File" size="big" />
               </Grid.Column>
               <Grid.Column verticalAlign="middle">
-                <Button content="Folder" size="big" />
+                <Button onClick={()=> {openDirectory();props.setOpen(false)}} content="Folder" size="big" />
               </Grid.Column>
             </Grid>
             <Divider vertical>Or</Divider>

@@ -11,25 +11,51 @@ import CrModal from "./components/CrModal";
 // import { ReactS3Uploader } from 'react-s3-uploader';
 
 function App() {
-  const { getRootProps, getInputProps, open, acceptedFiles } = useDropzone({
+  const onDropFunction = (acceptedFiles) => {setDataFiles((curr)=> [...curr,...acceptedFiles.map((file)=>{
+    return{
+      file:file,
+      vcitan:false,
+      obraboteni:4,
+      predupreduvanja:3,
+      korisnik:''
+    }
+  })])}
+  const { getRootProps : getRootPropsFile, getInputProps : getInputPropsFile, open : openFile, acceptedFiles : acceptedFilesFile } = useDropzone({
+    onDrop:onDropFunction,
     // Disable click and keydown behavior
     noClick: true,
     noKeyboard: true,
   });
-
-  const [startDate, setStartDate] = useState(new Date());
-  const [vcitajEnabled,setVcitajEnabled] = useState(false);
-  const [korisnik,setKoriskin] = useState('');
-
-
-  // const [tableData, setTableData] = useState([]);
-
-  const files = acceptedFiles.map((file) =>{
-    return file;
+  const { getRootProps, getInputProps, open, acceptedFiles } = useDropzone({
+    onDrop:onDropFunction,
+    // Disable click and keydown behavior
+    noClick: true,
+    noKeyboard: true,
   });
+  const [openModal, setOpenModal] = useState(false);
+  const [startDate, setStartDate] = useState(new Date());
+  // const [vcitajEnabled,setVcitajEnabled] = useState(false);
+  const [korisnik,setKorisnik] = useState('');
+  const [korisnikError,setKorisnikError] = useState(false);
+  const [dataFiles,setDataFiles] = useState([]);
+  
+  // const [tableData, setTableData] = useState([]);
+  
+  // const files = [...acceptedFiles,...acceptedFilesFile]
+  
+  const vcitajEnabled = dataFiles.length > 0 && dataFiles.some(a=>!a.vcitan)
 
   const clickVcitaj = ()=> {
-    setVcitajEnabled(false);
+    if(!korisnik){
+      setKorisnikError(true)
+      return;
+    }
+    // setVcitajEnabled(false);
+    setDataFiles(dataFiles.map(file=>{
+      file.vcitan=true;
+      console.log(file)
+      return file
+    }))
   }
 
   
@@ -41,8 +67,15 @@ function App() {
       </Segment>
       <Segment style={{ padding: "10px", display: "none" }}>
         <CrDropzone
+          isDirectory={true}
           getRootProps={getRootProps}
           getInputProps={getInputProps}
+          // files={files}
+        />
+        <CrDropzone
+          isDirectory={false}
+          getRootProps={getRootPropsFile}
+          getInputProps={getInputPropsFile}
           // files={files}
         />
       </Segment>
@@ -60,14 +93,16 @@ function App() {
                 placeholderText="Year/Month"
                 onChange={(date) => {
                   setStartDate(date);
-                  open();
-                  setVcitajEnabled(true);
+                  setOpenModal(true)
+                  // setVcitajEnabled(true);
                 }}
               />
             </div>
           </Segment>
           <Segment>
-            <Input label="Корисник" placeholder="Корисник" value={korisnik} />
+            <Input label="Корисник" error={korisnikError} placeholder="Корисник" value={korisnik} onChange={(e) => {
+              setKorisnikError(false)
+              setKorisnik(e.target.value)}} />
           </Segment>
           <Segment>
             <Button primary disabled={!vcitajEnabled} onClick={clickVcitaj}>
@@ -78,10 +113,10 @@ function App() {
         <p style={{ clear: "both" }} />
       </Segment>
       <Segment>
-        <CrTable tableData={files} startDate={startDate} />
+        <CrTable tableData={dataFiles} startDate={startDate} korisnik={korisnik} />
       </Segment>
       <Progress percent={50} />
-      <CrModal/>
+      <CrModal open={openModal} setOpen={setOpenModal} openFiles={openFile} openDirectory={open}/>
     </Container>
   );
 }

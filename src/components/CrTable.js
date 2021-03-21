@@ -1,7 +1,7 @@
 import React from "react";
 import { Header, Rating, Table } from "semantic-ui-react";
 
-const CrTable = ({ tableData, startDate }) => {
+const CrTable = ({ tableData, startDate, korisnik }) => {
   return (
     <Table celled padded>
       <Table.Header>
@@ -24,18 +24,22 @@ const CrTable = ({ tableData, startDate }) => {
                 {new Date(startDate).toISOString().substring(0, 7)}
                 </Table.Cell>
               <Table.Cell>
-                {tr.name}
+                {tr.file.name}
               </Table.Cell>
               <Table.Cell>
-                {tr.name}
+                {tr.file.name}
               </Table.Cell>
               <Table.Cell>
+                {tr.vcitan?"da":'ne'}
               </Table.Cell>
               <Table.Cell>
+                {tr.obraboteni}
               </Table.Cell>
               <Table.Cell>
+                {tr.predupreduvanja}
               </Table.Cell>
               <Table.Cell>
+                {korisnik}
               </Table.Cell>
             </Table.Row>
           );
