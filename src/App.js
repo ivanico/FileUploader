@@ -1,61 +1,84 @@
 import "./App.css";
 import "semantic-ui-css/semantic.min.css";
 import "react-datepicker/dist/react-datepicker.css";
-import { Button, Container, Header, Input, Label, Progress, Segment } from "semantic-ui-react";
+import { Button, Container, Header, Input, Label, Popup, Segment } from "semantic-ui-react";
 import { useDropzone } from "react-dropzone";
 import CrTable from "./components/CrTable";
 import CrDropzone from "./components/CrDropzone";
 import DatePicker from "react-datepicker";
 import { useState } from "react";
 import CrModal from "./components/CrModal";
+import _ from "lodash";
 // import { ReactS3Uploader } from 'react-s3-uploader';
 
 function App() {
-  const onDropFunction = (acceptedFiles) => {setDataFiles((curr)=> [...curr,...acceptedFiles.map((file)=>{
-    return{
-      file:file,
-      vcitan:false,
-      obraboteni:4,
-      predupreduvanja:3,
-      korisnik:''
-    }
-  })])}
-  const { getRootProps : getRootPropsFile, getInputProps : getInputPropsFile, open : openFile, acceptedFiles : acceptedFilesFile } = useDropzone({
+
+  const getDatePartFromPath = (a) =>{
+    var godina = a.substring(0,a.indexOf('-'))
+    var mesec = a.substring(a.indexOf('-')+1,a.indexOf('/'))
+    var den = a.substring(a.indexOf('/')+1, a.indexOf('/', a.indexOf('/')+1));
+    return [godina,mesec,den].join('-');
+  }
+
+  const onDropFunction = (acceptedFiles) => {setDataFiles((curr)=>{ 
+    var newFiles = [...acceptedFiles].map(file=> {
+      return {
+        date: getDatePartFromPath(file.path),
+        file
+      }
+    });
+    const grouped = _.groupBy(newFiles,"date");
+    const flattened = _.flatMap(grouped, (files,key)=> {
+      const orderedFiles = _.orderBy(files, x=> x.file.name);
+      return {
+        date: key,
+        prvFajl: _.first(orderedFiles).file.name,
+        posledenFajl: _.last(orderedFiles).file.name,
+        obraboteni:0,
+        predupreduvanja:0,
+        korisnik:'',
+        files
+      };
+    });
+    const ordered = _.orderBy(flattened,"date");
+    return [...curr,...ordered]
+    });
+  }
+
+  const { getRootProps : getRootPropsFile,
+     getInputProps : getInputPropsFile,
+     open : openFile } = useDropzone({
     onDrop:onDropFunction,
-    // Disable click and keydown behavior
     noClick: true,
     noKeyboard: true,
   });
-  const { getRootProps, getInputProps, open, acceptedFiles } = useDropzone({
+  const { getRootProps, getInputProps, open } = useDropzone({
     onDrop:onDropFunction,
-    // Disable click and keydown behavior
     noClick: true,
     noKeyboard: true,
   });
   const [openModal, setOpenModal] = useState(false);
   const [startDate, setStartDate] = useState(new Date());
-  // const [vcitajEnabled,setVcitajEnabled] = useState(false);
   const [korisnik,setKorisnik] = useState('');
   const [korisnikError,setKorisnikError] = useState(false);
   const [dataFiles,setDataFiles] = useState([]);
   
-  // const [tableData, setTableData] = useState([]);
-  
-  // const files = [...acceptedFiles,...acceptedFilesFile]
-  
   const vcitajEnabled = dataFiles.length > 0 && dataFiles.some(a=>!a.vcitan)
+
+  const setVcitanoByKorisnik = (user, data, updateFunction) =>{
+    updateFunction([...data].map(x=>{
+       x.korisnik = x.korisnik || user;
+       x.vcitan=true;
+       return x;
+    }));
+  }
 
   const clickVcitaj = ()=> {
     if(!korisnik){
-      setKorisnikError(true)
+      setKorisnikError(true);
       return;
     }
-    // setVcitajEnabled(false);
-    setDataFiles(dataFiles.map(file=>{
-      file.vcitan=true;
-      console.log(file)
-      return file
-    }))
+    setVcitanoByKorisnik(korisnik, dataFiles, setDataFiles);
   }
 
   
@@ -93,30 +116,49 @@ function App() {
                 placeholderText="Year/Month"
                 onChange={(date) => {
                   setStartDate(date);
-                  setOpenModal(true)
+                  setOpenModal(true);
                   // setVcitajEnabled(true);
                 }}
               />
             </div>
           </Segment>
           <Segment>
-            <Input label="Корисник" error={korisnikError} placeholder="Корисник" value={korisnik} onChange={(e) => {
-              setKorisnikError(false)
-              setKorisnik(e.target.value)}} />
+            <Input
+              label="Корисник"
+              error={korisnikError}
+              placeholder="Корисник"
+              value={korisnik}
+              onChange={(e) => {
+                setKorisnikError(false);
+                setKorisnik(e.target.value);
+              }}
+            />
           </Segment>
           <Segment>
-            <Button primary disabled={!vcitajEnabled} onClick={clickVcitaj}>
-              Вчитај
-            </Button>
+            {vcitajEnabled && 
+              <Button primary onClick={clickVcitaj} content="Вчитај" />
+            }
+            {!vcitajEnabled && 
+              <Popup content='Нема фајлови за вчитување' trigger={<span><Button disabled primary content="Вчитај" /></span>} />
+            }
           </Segment>
         </Segment.Group>
         <p style={{ clear: "both" }} />
       </Segment>
-      <Segment>
-        <CrTable tableData={dataFiles} startDate={startDate} korisnik={korisnik} />
-      </Segment>
-      <Progress percent={50} />
-      <CrModal open={openModal} setOpen={setOpenModal} openFiles={openFile} openDirectory={open}/>
+      {dataFiles.length > 0 &&
+        <Segment>
+          <CrTable
+            tableData={dataFiles}
+            startDate={startDate}
+          />
+        </Segment>
+      }
+      <CrModal
+        open={openModal}
+        setOpen={setOpenModal}
+        openFiles={openFile}
+        openDirectory={open}
+      />
     </Container>
   );
 }

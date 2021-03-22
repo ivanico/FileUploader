@@ -1,7 +1,7 @@
 import React from "react";
-import { Header, Rating, Table } from "semantic-ui-react";
+import { Header, Icon, Rating, Table } from "semantic-ui-react";
 
-const CrTable = ({ tableData, startDate, korisnik }) => {
+const CrTable = ({ tableData}) => {
   return (
     <Table celled padded>
       <Table.Header>
@@ -21,25 +21,26 @@ const CrTable = ({ tableData, startDate, korisnik }) => {
           return (
             <Table.Row key={ind} >
               <Table.Cell>
-                {new Date(startDate).toISOString().substring(0, 7)}
+                {tr.date}
+                {/* {new Date(startDate).toISOString().substring(0, 7)} */}
                 </Table.Cell>
               <Table.Cell>
-                {tr.file.name}
+                {tr.prvFajl}
               </Table.Cell>
               <Table.Cell>
-                {tr.file.name}
+                {tr.posledenFajl}
               </Table.Cell>
-              <Table.Cell>
-                {tr.vcitan?"da":'ne'}
+              <Table.Cell style={{textAlign: 'center'}}>
+                {tr.vcitan? <Icon name="check" color="green" />: <Icon name="close" color="red" />}
               </Table.Cell>
-              <Table.Cell>
-                {tr.obraboteni}
+              <Table.Cell style={{textAlign: 'center'}}>
+                {tr.obraboteni + "/" +  tr.files.length}
               </Table.Cell>
-              <Table.Cell>
+              <Table.Cell style={{textAlign: 'center'}}>
                 {tr.predupreduvanja}
               </Table.Cell>
               <Table.Cell>
-                {korisnik}
+                {tr.korisnik}
               </Table.Cell>
             </Table.Row>
           );
