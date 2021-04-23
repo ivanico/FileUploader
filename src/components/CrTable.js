@@ -1,11 +1,21 @@
-import React from "react";
-import { Header, Icon, Rating, Table } from "semantic-ui-react";
+import React, { useState } from "react";
+import { Header, Icon, Rating, Table, Checkbox, Button } from "semantic-ui-react";
 
-const CrTable = ({ tableData}) => {
+const CrTable = ({ tableData }) => {
+
+  const [select, setSelect] = useState(false)
+  const [selectAll, setSelectAll] = useState(false)
+
+
+  const handleSelectAll = e => setSelectAll(!selectAll)
+
   return (
     <Table celled padded>
       <Table.Header>
         <Table.Row>
+          <Table.HeaderCell textAlign='center'>
+            <Button /*style={{backgroundColor:"rgb(249 250 251)"}}*/ onClick={handleSelectAll}>Изберете ги сите</Button>
+          </Table.HeaderCell>
           <Table.HeaderCell singleLine>Датум</Table.HeaderCell>
           <Table.HeaderCell>Прв Фајл</Table.HeaderCell>
           <Table.HeaderCell>Последен Фајл</Table.HeaderCell>
@@ -20,6 +30,11 @@ const CrTable = ({ tableData}) => {
         {tableData.map((tr,ind) => {
           return (
             <Table.Row key={ind} >
+              <Table.Cell  textAlign='center'>
+                <Checkbox
+                // checked={selectAll}
+                />
+              </Table.Cell>
               <Table.Cell>
                 {tr.date}
                 {/* {new Date(startDate).toISOString().substring(0, 7)} */}
